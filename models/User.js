@@ -1,5 +1,6 @@
 const mongoose=require('mongoose')
-const bcrypt=require('bcrypt')
+const bcrypt=require('bcrypt');
+const Post = require('./Post.js');
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -20,7 +21,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ['user', 'admin'],
         default: 'user'
-      }
+      },
+    posts: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Post'
+    }]
 }, {timestamps: true});
 
 userSchema.methods.comparePassword = async function (password) {
