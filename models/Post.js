@@ -9,6 +9,12 @@ const postSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    category: {
+        type: String,
+        enum: ['Lost', 'Found'],
+        default: 'Lost',
+        required: true
+    },
 }, { timestamps: true });
 
 const Post = mongoose.model('Post', postSchema);

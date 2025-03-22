@@ -4,11 +4,11 @@ const User = require('../models/User.js');
 const Post = require('../models/Post.js');
 
 const uploadPost = async (req, res, next) => {
-    const { title, body } = req.body;
+    const { title, body, category } = req.body;
     try {
         const user=req.user;
 
-        const newPost=new Post({title, body});
+        const newPost=new Post({title, body, category});
 
         await newPost.save();
 
