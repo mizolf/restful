@@ -10,4 +10,9 @@ userRouter.get('/profile', authenticate, (req, res)=>{
 
 userRouter.post('/post', authenticate, uploadPost);
 
+userRouter.post('/logout', (req, res) => {
+    res.clearCookie('token');
+    res.json({ message: 'Logged out successfully' });
+});
+
 module.exports = userRouter;

@@ -1,6 +1,8 @@
 const express=require('express')
-const connectToDB = require('./db')
 const cors = require('cors')
+const cookieParser=require('cookie-parser')
+
+const connectToDB = require('./db')
 const authRoutes = require('./routes/auth.routes.js')
 const userRoutes = require('./routes/user.routes.js')
 
@@ -11,6 +13,7 @@ connectToDB();
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 app.use('/auth', authRoutes)
 app.use('/user', userRoutes)
