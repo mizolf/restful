@@ -2,17 +2,24 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/User.js');
 const Post = require('../models/Post.js');
+const { uploadToCloudinary } = require('../services/cloudinary.js');
 
 const uploadPost = async (req, res, next) => {
-    const { title, body, category } = req.body;
+    const { title, body, category, image } = req.body;
     try {
+
+        let imageData = {}
+        if(image) {
+            const results = await uploadToCloudinary(image, "my-posts");
+            imageData = results;
+        }
 
         if(!title || !body) return res.status(400).json({ message: "Title and body are required." });
 
         const user=req.user;
         if(!user) return res.status(401).json({message: 'Unauthorized'});
 
-        const newPost=new Post({title, body, category, user: user._id});
+        const newPost=new Post({title, body, category, image: imageData, user: user._id});
 
         await newPost.save();
 

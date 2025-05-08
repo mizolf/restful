@@ -9,6 +9,16 @@ const postSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    image:{
+        publicId:{
+            type: String,
+            required: true,
+        },
+        url: {
+            type: String,
+            required: true,
+        }
+    },
     category: {
         type: String,
         enum: ['Lost', 'Found'],
