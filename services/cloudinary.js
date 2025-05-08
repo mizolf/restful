@@ -17,4 +17,12 @@ const uploadToCloudinary = async (path, folder = "my-posts") => {
     }
 };
 
-module.exports = { uploadToCloudinary }
+const retrieveFromCloudinary = (publicId) => {
+    return cloudinary.url(`${publicId}.jpg`, {
+        width: 100,
+        height: 150,
+        crop: 'fill'
+    });
+};
+
+module.exports = { uploadToCloudinary, retrieveFromCloudinary }

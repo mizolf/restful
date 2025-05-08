@@ -41,5 +41,14 @@ const fetchPosts = async (req, res, next) => {
     }
 }
 
+const fetchImages = async (req, res, next) => {
+    try {
+        retrieveFromCloudinary(req.params.publicId);
+        res.status(200).json({ message: "Image retrieved successfully" });
+    } catch (error) {
+        next(error);
+    }
+} 
+
 module.exports = { uploadPost, fetchPosts };
 
