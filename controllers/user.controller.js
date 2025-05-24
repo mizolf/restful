@@ -41,6 +41,15 @@ const fetchPosts = async (req, res, next) => {
     }
 }
 
+const fetchUserPosts = async (req, res, next) => {
+    try {
+        const posts = await Post.find({ user: req.user._id }).populate('user', 'username email');
+        res.status(200).json(posts);
+      } catch (err) {
+        next(err);
+      }
+ }
+
 const fetchImages = async (req, res, next) => {
     try {
         retrieveFromCloudinary(req.params.publicId);
@@ -50,5 +59,5 @@ const fetchImages = async (req, res, next) => {
     }
 } 
 
-module.exports = { uploadPost, fetchPosts };
+module.exports = { uploadPost, fetchPosts, fetchUserPosts };
 

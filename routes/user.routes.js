@@ -1,14 +1,19 @@
 const express=require('express')
 const { authenticate } = require('../middleware/auth.middleware.js');
-const { uploadPost, fetchPosts } = require('../controllers/user.controller.js');
+const { uploadPost, fetchPosts, fetchUserPosts } = require('../controllers/user.controller.js');
 const { retrieveFromCloudinary } = require('../services/cloudinary.js');
 
 const userRouter=express.Router()
 
 userRouter.get('/posts', fetchPosts);
 
+userRouter.get('/my-posts', authenticate, fetchUserPosts);
+
 userRouter.get('/profile', authenticate, (req, res)=>{
-    res.json({ message: `Welcome ${req.user.username}`});
+    res.json({
+        username: req.user.username,
+        email: req.user.email,
+        createdAt: req.user.createdAt});
 });
 
 
