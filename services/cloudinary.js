@@ -25,4 +25,13 @@ const retrieveFromCloudinary = (publicId) => {
     });
 };
 
-module.exports = { uploadToCloudinary, retrieveFromCloudinary }
+const deleteFromCloudinary = async (publicId) => {
+    try {
+        await cloudinary.uploader.destroy(publicId);
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
+module.exports = { uploadToCloudinary, retrieveFromCloudinary, deleteFromCloudinary }

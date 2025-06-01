@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/User.js');
 const Post = require('../models/Post.js');
-const { uploadToCloudinary } = require('../services/cloudinary.js');
+const { uploadToCloudinary, deleteFromCloudinary } = require('../services/cloudinary.js');
 
 const uploadPost = async (req, res, next) => {
     const { title, body, category, image } = req.body;
@@ -57,7 +57,28 @@ const fetchImages = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
-} 
+}
 
-module.exports = { uploadPost, fetchPosts, fetchUserPosts };
+const deletePostById = async (req, res, next) => {
+    const postId = req.params.id;
+    try {
+        const post = await Post.findById(postId);
+        if (!post) return res.status(404).json({ message: "Post not found" });
+
+        if (post.user.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ message: "You are not authorized to delete this post" });
+        }
+
+        if(post.image?.publicId){
+            await deleteFromCloudinary(post.image.publicId);
+        }
+
+        await Post.findByIdAndDelete(postId);
+        res.status(200).json({ message: "Post deleted successfully" });
+    } catch (error) {
+        next(error);
+    }
+}
+
+module.exports = { uploadPost, fetchPosts, fetchUserPosts, deletePostById };
 
