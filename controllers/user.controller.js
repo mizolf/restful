@@ -80,5 +80,62 @@ const deletePostById = async (req, res, next) => {
     }
 }
 
-module.exports = { uploadPost, fetchPosts, fetchUserPosts, deletePostById };
+const editPost = async (req, res, next) => {
+      try {
+    const { id } = req.params;
+    const { title, body, category } = req.body;
+    const userId = req.user.id;
+
+    if (!title || !body || !category) {
+      return res.status(400).json({ 
+        error: 'Title, body, and category are required' 
+      });
+    }
+
+    if (!['Lost', 'Found'].includes(category)) {
+      return res.status(400).json({ 
+        error: 'Category must be either "Lost" or "Found"' 
+      });
+    }
+
+    const post = await Post.findById(id);
+    
+    if (!post) {
+      return res.status(404).json({ 
+        error: 'Post not found' 
+      });
+    }
+
+    if (post.user.toString() !== userId.toString()) {
+      return res.status(403).json({ 
+        error: 'You can only edit your own posts' 
+      });
+    }
+
+    const updatedPost = await Post.findByIdAndUpdate(
+      id,
+      {
+        title: title.trim(),
+        body: body.trim(),
+        category,
+        updatedAt: new Date()
+      },
+      { 
+        new: true, 
+        runValidators: true 
+      }
+    ).populate('user', 'username email'); 
+
+    res.status(200).json({
+      message: 'Post updated successfully',
+      post: updatedPost
+    });
+
+  } catch (error) {
+
+    next(error);
+  }
+}
+
+module.exports = { uploadPost, fetchPosts, fetchUserPosts, deletePostById, editPost };
 

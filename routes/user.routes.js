@@ -1,6 +1,6 @@
 const express=require('express')
 const { authenticate } = require('../middleware/auth.middleware.js');
-const { uploadPost, fetchPosts, fetchUserPosts, deletePostById } = require('../controllers/user.controller.js');
+const { uploadPost, fetchPosts, fetchUserPosts, deletePostById, editPost } = require('../controllers/user.controller.js');
 const { retrieveFromCloudinary } = require('../services/cloudinary.js');
 
 const userRouter=express.Router()
@@ -10,6 +10,8 @@ userRouter.get('/posts', fetchPosts);
 userRouter.get('/my-posts', authenticate, fetchUserPosts);
 
 userRouter.delete('/posts/:id', authenticate, deletePostById);
+
+userRouter.put('/posts/:id', authenticate, editPost);
 
 userRouter.get('/profile', authenticate, (req, res)=>{
     res.json({
